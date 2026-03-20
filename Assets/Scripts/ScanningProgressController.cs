@@ -2,7 +2,9 @@ using UnityEngine;
 
 /// <summary>
 /// Scanning状態中の鼓動演出を制御するコントローラー。
-/// 時間経過でBPMが加速していく。
+/// 1. 時間経過で漸近的に加速（最大値に近づくが到達しない）
+/// 2. イベントで段階的にジャンプ（AdvancePhase）
+/// 両方を組み合わせて使用。
 /// </summary>
 public class ScanningProgressController : MonoBehaviour
 {
@@ -10,60 +12,122 @@ public class ScanningProgressController : MonoBehaviour
     [Tooltip("鼓動演出を行うImageHeart")]
     [SerializeField] private ImageHeart imageHeart;
 
-    [Header("BPM Acceleration Settings")]
-    [Tooltip("開始時のBPM")]
-    [SerializeField] private float minBPM = 40f;
+    [Header("Asymptotic Acceleration (時間ベース漸近加速)")]
+    [Tooltip("開始BPM")]
+    [SerializeField] private float startBPM = 50f;
 
-    [Tooltip("最大BPM")]
-    [SerializeField] private float maxBPM = 140f;
+    [Tooltip("最大BPM（到達しないが近づく）")]
+    [SerializeField] private float maxBPM = 150f;
 
-    [Tooltip("最小BPMから最大BPMに到達するまでの時間（秒）")]
-    [SerializeField] private float accelerationDuration = 10f;
+    [Tooltip("開始スケール")]
+    [SerializeField] private float startScale = 1.05f;
 
+    [Tooltip("最大スケール")]
+    [SerializeField] private float maxScale = 1.30f;
+
+    [Tooltip("開始音量")]
+    [SerializeField] private float startVolume = 0.3f;
+
+    [Tooltip("最大音量")]
+    [SerializeField] private float maxVolume = 0.8f;
+
+    [Tooltip("半減期（秒）- この時間で残り距離の半分進む")]
+    [SerializeField] private float halfLife = 8f;
+
+    [Header("Event Boost (イベント時のジャンプ)")]
+    [Tooltip("AdvancePhase時に追加するBPM")]
+    [SerializeField] private float boostBPM = 15f;
+
+    [Tooltip("AdvancePhase時に追加するスケール")]
+    [SerializeField] private float boostScale = 0.03f;
+
+    [Tooltip("AdvancePhase時に追加する音量")]
+    [SerializeField] private float boostVolume = 0.05f;
+
+    private float currentBPM;
+    private float currentScale;
+    private float currentVolume;
     private float elapsedTime = 0f;
-    private bool isAccelerating = false;
+    private bool isActive = false;
 
     private void OnEnable()
     {
-        // Scanning状態に入るたびにリセット＆加速開始
+        // Scanning状態に入るたびにリセット
+        currentBPM = startBPM;
+        currentScale = startScale;
+        currentVolume = startVolume;
         elapsedTime = 0f;
-        isAccelerating = true;
+        isActive = true;
 
-        if (imageHeart != null)
-        {
-            imageHeart.SetBPM(minBPM);
-        }
-
-        Debug.Log($"[ScanningProgress] 開始: BPM {minBPM} → {maxBPM} ({accelerationDuration}秒)");
+        ApplyValues();
+        Debug.Log($"[ScanningProgress] 開始: BPM {startBPM} → {maxBPM} (半減期 {halfLife}秒)");
     }
 
     private void OnDisable()
     {
-        // Scanning終了時に停止
-        isAccelerating = false;
+        isActive = false;
     }
 
     private void Update()
     {
-        if (!isAccelerating || imageHeart == null) return;
+        if (!isActive || imageHeart == null) return;
 
-        // 経過時間を更新
         elapsedTime += Time.deltaTime;
 
-        // 0〜1の進捗率を計算
-        float progress = Mathf.Clamp01(elapsedTime / accelerationDuration);
+        // 指数減衰による漸近的加速
+        // 公式: current = max - (max - start) * 0.5^(t / halfLife)
+        // 時間が経つほど最大値に近づくが、到達することはない
+        float decay = Mathf.Pow(0.5f, elapsedTime / halfLife);
 
-        // BPMを線形補間で計算
-        float currentBPM = Mathf.Lerp(minBPM, maxBPM, progress);
+        float targetBPM = maxBPM - (maxBPM - startBPM) * decay;
+        float targetScale = maxScale - (maxScale - startScale) * decay;
+        float targetVolume = maxVolume - (maxVolume - startVolume) * decay;
 
-        // ImageHeartに反映
-        imageHeart.SetBPM(currentBPM);
+        // 現在値を更新（イベントブーストによる上乗せを維持）
+        currentBPM = Mathf.Max(currentBPM, targetBPM);
+        currentScale = Mathf.Max(currentScale, targetScale);
+        currentVolume = Mathf.Max(currentVolume, targetVolume);
 
-        // 最大に到達したらログ出力（1回だけ）
-        if (progress >= 1f && isAccelerating)
+        ApplyValues();
+    }
+
+    /// <summary>
+    /// 次のフェーズに進む（イベントブースト）
+    /// </summary>
+    public void AdvancePhase()
+    {
+        // 現在値に即座にブーストを追加
+        currentBPM = Mathf.Min(currentBPM + boostBPM, maxBPM);
+        currentScale = Mathf.Min(currentScale + boostScale, maxScale);
+        currentVolume = Mathf.Min(currentVolume + boostVolume, maxVolume);
+
+        ApplyValues();
+        Debug.Log($"[ScanningProgress] Boost! BPM {currentBPM:F0}, Scale {currentScale:F2}");
+    }
+
+    /// <summary>
+    /// 特定のフェーズにジャンプ（互換性のため維持）
+    /// </summary>
+    public void SetPhase(int phase)
+    {
+        // 複数回ブースト
+        for (int i = 0; i < phase; i++)
         {
-            Debug.Log($"[ScanningProgress] 最大BPM {maxBPM} に到達");
-            isAccelerating = false; // これ以上更新しない
+            AdvancePhase();
         }
     }
+
+    private void ApplyValues()
+    {
+        if (imageHeart == null) return;
+
+        imageHeart.SetBPM(currentBPM);
+        imageHeart.SetScaleRange(1.0f, currentScale);
+        imageHeart.SetVolume(currentVolume);
+    }
+
+    /// <summary>
+    /// 現在のBPMを取得
+    /// </summary>
+    public float CurrentBPM => currentBPM;
 }

@@ -69,6 +69,8 @@ class OllamaClient:
         normalized.setdefault("shape", "Other")
         normalized.setdefault("state", "Normal")
         normalized.setdefault("item_name", "Unknown Object")
+        normalized.setdefault("item_category", "other")
+        normalized.setdefault("confidence", 1.0)
         
         return normalized
 
@@ -174,7 +176,17 @@ Example:
             else:
                 prompt_text = prompts.ANALYSIS_PROMPT
 
-            analysis_response = ollama.chat(
+            # ストリーミングで進捗を通知
+            full_content = ""
+            token_count = 0
+            progress_interval = 10  # 10トークンごとに進捗通知（頻度UP）
+            
+            # Ollama処理開始を通知（初期化待ち時間のフィードバック）
+            print("[[OLLAMA_START]]")
+            import sys
+            sys.stdout.flush()
+            
+            for chunk in ollama.chat(
                 model=self.model_name,
                 messages=[{
                     "role": "user",
@@ -182,14 +194,24 @@ Example:
                     "images": [image_data]
                 }],
                 options={
-                    "temperature": 0.1,      # Conservative for consistent output
-                    "num_predict": 1024,     # Increased for CoT reasoning
-                    "top_p": 0.85,           # Slightly tighter distribution
-                    "repeat_penalty": 1.1    # Prevent repetitive output
-                }
-            )
+                    "temperature": 0.1,
+                    "num_predict": 1024,
+                    "top_p": 0.85,
+                    "repeat_penalty": 1.1
+                },
+                stream=True
+            ):
+                if 'message' in chunk and 'content' in chunk['message']:
+                    full_content += chunk['message']['content']
+                    token_count += 1
+                    
+                    # 一定トークンごとに進捗通知
+                    if token_count % progress_interval == 0:
+                        print(f"[[OLLAMA_PROGRESS]] {token_count}")
+                        import sys
+                        sys.stdout.flush()
             
-            content = analysis_response['message']['content']
+            content = full_content
             analysis_data = self.extract_json(content)
             
             if not analysis_data:

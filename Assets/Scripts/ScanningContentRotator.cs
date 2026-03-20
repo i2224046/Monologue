@@ -35,10 +35,23 @@ public class ScanningContentRotator : MonoBehaviour
     [Tooltip("フェードにかかる時間（秒）")]
     [SerializeField] private float fadeDuration = 0.5f;
 
+    [Header("Phase 2 Templates (Item Identified)")]
+    [Tooltip("アイテム識別後に表示するメッセージテンプレート（{0}にアイテム名が入る）")]
+    [SerializeField] private string[] itemIdentifiedTemplates = new string[]
+    {
+        "{0}に耳を傾けています...",
+        "{0}に触れて鼓動を感じ取ってください..."
+    };
+
     private int currentIndex = 0;
     private float timer = 0f;
     private bool isRotating = false;
     private Coroutine fadeCoroutine;
+    
+    // Phase 2 用の動的コンテンツ
+    private string[] phase2Messages = null;
+    private int phase2Index = 0;
+    private bool isPhase2 = false;
 
     /// <summary>
     /// コンテンツの切り替えを開始する
@@ -105,12 +118,46 @@ public class ScanningContentRotator : MonoBehaviour
         }
 
         Debug.Log("[ScanningContentRotator] ローテーション停止");
+        
+        // Phase 2 リセット
+        isPhase2 = false;
+        phase2Messages = null;
+        phase2Index = 0;
     }
 
     /// <summary>
     /// 現在ローテーション中かどうか
     /// </summary>
     public bool IsRotating => isRotating;
+
+    /// <summary>
+    /// Phase 2: アイテム識別完了時に呼び出し、アイテム名入りローテーションを開始
+    /// </summary>
+    public void SetItemIdentified(string itemName)
+    {
+        if (itemIdentifiedTemplates == null || itemIdentifiedTemplates.Length == 0)
+        {
+            Debug.LogWarning("[ScanningContentRotator] Phase 2 テンプレートが設定されていません。");
+            return;
+        }
+
+        // テンプレートにアイテム名を埋め込んでPhase 2メッセージを生成
+        phase2Messages = new string[itemIdentifiedTemplates.Length];
+        for (int i = 0; i < itemIdentifiedTemplates.Length; i++)
+        {
+            phase2Messages[i] = string.Format(itemIdentifiedTemplates[i], itemName);
+        }
+
+        // Phase 2 モードを有効化
+        isPhase2 = true;
+        phase2Index = 0;
+        timer = 0f;
+
+        // 最初のPhase 2メッセージを表示
+        ShowPhase2Content();
+
+        Debug.Log($"[ScanningContentRotator] Phase 2 開始: {itemName} ({phase2Messages.Length}件のメッセージ)");
+    }
 
     private void Update()
     {
@@ -121,6 +168,29 @@ public class ScanningContentRotator : MonoBehaviour
         if (timer >= intervalSeconds)
         {
             timer = 0f;
+
+            // Phase 2 モードの場合
+            if (isPhase2 && phase2Messages != null && phase2Messages.Length > 0)
+            {
+                phase2Index++;
+                if (phase2Index >= phase2Messages.Length)
+                {
+                    phase2Index = 0; // ループ
+                }
+
+                if (useFade)
+                {
+                    if (fadeCoroutine != null) StopCoroutine(fadeCoroutine);
+                    fadeCoroutine = StartCoroutine(FadeOutAndInPhase2());
+                }
+                else
+                {
+                    ShowPhase2Content();
+                }
+                return;
+            }
+
+            // Phase 1 (通常モード)
             currentIndex++;
 
             // ループ処理
@@ -153,6 +223,22 @@ public class ScanningContentRotator : MonoBehaviour
             {
                 ShowCurrentContent();
             }
+        }
+    }
+
+    private void ShowPhase2Content()
+    {
+        if (phase2Messages == null || phase2Index >= phase2Messages.Length) return;
+
+        if (targetTMP != null)
+        {
+            targetTMP.text = phase2Messages[phase2Index];
+        }
+
+        // Phase 2 では画像を非表示
+        if (targetImage != null)
+        {
+            targetImage.enabled = false;
         }
     }
 
@@ -241,6 +327,33 @@ public class ScanningContentRotator : MonoBehaviour
 
         // コンテンツ切り替え
         ShowCurrentContent();
+
+        // フェードイン
+        elapsed = 0f;
+        while (elapsed < fadeDuration)
+        {
+            elapsed += Time.deltaTime;
+            SetAlpha(Mathf.Clamp01(elapsed / fadeDuration));
+            yield return null;
+        }
+        SetAlpha(1f);
+        fadeCoroutine = null;
+    }
+
+    private IEnumerator FadeOutAndInPhase2()
+    {
+        // フェードアウト
+        float elapsed = 0f;
+        while (elapsed < fadeDuration)
+        {
+            elapsed += Time.deltaTime;
+            SetAlpha(1f - Mathf.Clamp01(elapsed / fadeDuration));
+            yield return null;
+        }
+        SetAlpha(0f);
+
+        // Phase 2 コンテンツ切り替え
+        ShowPhase2Content();
 
         // フェードイン
         elapsed = 0f;

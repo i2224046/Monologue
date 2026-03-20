@@ -34,6 +34,10 @@ public class PythonMessageRouter : MonoBehaviour
     [Tooltip("Scanning状態の進捗表示コントローラー")]
     [SerializeField] private ScanningProgressController scanningProgressController;
 
+    [Header("Scanning Content Rotator (Optional)")]
+    [Tooltip("Scanning状態のコンテンツローテーター")]
+    [SerializeField] private ScanningContentRotator scanningContentRotator;
+
     // 現在のメッセージとクレジットを保持
     private string currentMessage = "";
     private string currentCredit = "";
@@ -133,6 +137,28 @@ public class PythonMessageRouter : MonoBehaviour
             // 処理開始ログ（Scanning遷移は[[CAPTURE_DONE]]で行うため、ここでは遷移しない）
             HandleOtherLog(line);
         }
+        else if (line.Contains("[[OLLAMA_START]]"))
+        {
+            // Ollama処理開始（初期化待ち）→ フェーズ進行
+            if (scanningProgressController != null) scanningProgressController.AdvancePhase();
+        }
+        else if (line.Contains("[[OLLAMA_PROGRESS]]"))
+        {
+            // Ollamaストリーミング進捗 → フェーズ進行
+            if (scanningProgressController != null) scanningProgressController.AdvancePhase();
+        }
+        else if (line.Contains("[[OLLAMA ANALYSIS]]"))
+        {
+            // Ollama分析完了 → フェーズ進行
+            if (scanningProgressController != null) scanningProgressController.AdvancePhase();
+            HandleOtherLog(line);
+        }
+        else if (line.Contains("[[DEEPSEEK"))
+        {
+            // DeepSeek処理開始 → フェーズ進行
+            if (scanningProgressController != null) scanningProgressController.AdvancePhase();
+            HandleOtherLog(line);
+        }
         else if (line.Contains("[[CHARACTER]]"))
         {
             HandleCharacter(line);
@@ -144,6 +170,10 @@ public class PythonMessageRouter : MonoBehaviour
         else if (line.Contains("[[MESSAGE]]"))
         {
             HandleMessage(line);
+        }
+        else if (line.Contains("[[ITEM_IDENTIFIED]]"))
+        {
+            HandleItemIdentified(line);
         }
         else if (IsDeepSeekApiResponse(line))
         {
@@ -186,6 +216,21 @@ public class PythonMessageRouter : MonoBehaviour
         // FlowManagerに状態遷移を通知
         OnScanStartDetected?.Invoke();
         if (flowManager != null) flowManager.NotifyScanStart();
+    }
+
+    private void HandleItemIdentified(string line)
+    {
+        string itemName = line.Replace("[[ITEM_IDENTIFIED]]", "").Trim();
+        Debug.Log($"[Router] アイテム識別完了: {itemName}");
+
+        // フェーズ進行（YOLO完了）
+        if (scanningProgressController != null) scanningProgressController.AdvancePhase();
+
+        // ScanningContentRotator に通知 → Phase 2 ローテーション開始
+        if (scanningContentRotator != null)
+        {
+            scanningContentRotator.SetItemIdentified(itemName);
+        }
     }
 
     private void HandleCharacter(string line)

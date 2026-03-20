@@ -54,5 +54,5 @@ flowchart TD
 
 ## 関連ファイル
 
-- [config.json](file:///Users/asanolab/Sotsusei1107/Assets/StreamingAssets/config.json) - 音声設定・性格プロンプト定義
-- [main_vision_voice.py](file:///Users/asanolab/Sotsusei1107/Assets/StreamingAssets/main_vision_voice.py) - 性格判定ロジック (`determine_persona`関数)
+- [config.json](../Assets/StreamingAssets/config.json) - 音声設定・性格プロンプト定義
+- [main_vision_voice.py](../Assets/StreamingAssets/main_vision_voice.py) - 性格判定ロジック (`determine_persona`関数)

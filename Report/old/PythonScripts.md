@@ -18,7 +18,7 @@
 
 | スクリプト | 役割 |
 | :--- | :--- |
-| **ollama_client.py** | ローカルOllama（qwen2.5vl:7b）への画像分析リクエスト |
+| **ollama_client.py** | ローカルOllama（qwen3-vl:8b）への画像分析リクエスト |
 | **deepseek_client.py** | DeepSeek APIへのセリフ生成リクエスト |
 | **voice_client.py** | COEIROINK（ローカルTTS）への音声合成リクエスト |
 

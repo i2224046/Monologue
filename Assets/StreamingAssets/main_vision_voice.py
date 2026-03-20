@@ -19,6 +19,7 @@ from camera_capture import CameraCapture
 from yolo_processor import YOLOProcessor
 from rembg import remove
 import item_obsessions
+from category_mapping import get_display_name
 
 # --- Configuration & Constants ---
 WATCHED_EXTENSIONS = {'.jpg', '.jpeg', '.png'}
@@ -231,6 +232,12 @@ def process_frame(frame):
         cropped_frame, detection_info = yolo_processor.detect_and_crop(frame)
         logger.info(f"[[YOLO]] Detection: {detection_info.get('detection_count', 0)} objects, type: {detection_info.get('crop_type', 'none')}")
         
+        # 2.5 YOLO検出完了をUnityに通知（Phase 2 ローテーション開始トリガー）
+        primary_class = detection_info.get("primary_class")
+        if primary_class:
+            print(f"[[ITEM_IDENTIFIED]] {primary_class}")
+            sys.stdout.flush()
+        
         # 3. 明るさ調整（暗所対策）
         logger.info("[[PREPROCESS]] Adjusting brightness...")
         bright_frame = apply_intelligent_brightness(cropped_frame)
@@ -309,11 +316,19 @@ def _process_analysis(analysis_data, filename):
     
     item_name_raw = analysis_data.get("item_name", "Object")
     
-    # アイテム名を正規化（既知リストとのマッチング）
-    item_name = ollama_client.match_to_known_items(
-        item_name_raw, 
-        item_obsessions.CANONICAL_ITEMS
-    )
+    # 信頼度に基づいて表示名を決定（低信頼度の場合は抽象カテゴリ名を使用）
+    display_name = get_display_name(analysis_data, threshold=0.9)
+    
+    # アイテム名を正規化（既知リストとのマッチング）- 具体名の場合のみ
+    if display_name == item_name_raw:
+        item_name = ollama_client.match_to_known_items(
+            item_name_raw, 
+            item_obsessions.CANONICAL_ITEMS
+        )
+    else:
+        # 抽象名が使われる場合はそのまま使用
+        item_name = display_name
+        logger.info(f"[[CONFIDENCE]] Low confidence detected, using abstract name: {item_name}")
     
     is_machine_str = str(analysis_data.get("is_machine", False))
     shape_val = analysis_data.get("shape", "Unknown")
@@ -321,7 +336,8 @@ def _process_analysis(analysis_data, filename):
 
     obsession_instruction = item_obsessions.get_obsession_instruction(item_name)
     
-    context_str = f"Context: Machine={is_machine_str}, Shape={shape_val}, State={state_val}."
+    # context_str = f"Context: Machine={is_machine_str}, Shape={shape_val}, State={state_val}."
+    context_str = "" # ユーザー要望により、item_name以外の情報をカット（過去のシステムの名残削除）
     
     import prompts 
     topic = random.choice(prompts.TOPIC_LIST)

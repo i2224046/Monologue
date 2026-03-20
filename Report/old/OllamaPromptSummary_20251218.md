@@ -13,7 +13,7 @@
 | 項目 | 値 |
 |------|-----|
 | ライブラリ | `ollama` (Python) |
-| モデル | `qwen2.5vl:7b` (Vision Language Model) |
+| モデル | `qwen3-vl:8b` (Vision Language Model) |
 | Temperature | `0.2`（安定した分析結果を得るため低め） |
 
 ---

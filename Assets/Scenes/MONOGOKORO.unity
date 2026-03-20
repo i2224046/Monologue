@@ -1096,6 +1096,7 @@ MonoBehaviour:
   runeSpawner: {fileID: 0}
   useAllPythonLogsForRune: 0
   scanningProgressController: {fileID: 0}
+  scanningContentRotator: {fileID: 1680055737}
 --- !u!4 &923159058
 Transform:
   m_ObjectHideFlags: 0
@@ -1985,6 +1986,9 @@ MonoBehaviour:
   loop: 1
   useFade: 1
   fadeDuration: 0.5
+  itemIdentifiedTemplates:
+  - "{0}\u306B\u8033\u3092\u50BE\u3051\u3066\u3044\u307E\u3059..."
+  - "{0}\u306B\u89E6\u308C\u3066\u9F13\u52D5\u3092\u611F\u3058\u53D6\u3063\u3066\u304F\u3060\u3055\u3044..."
 --- !u!114 &1680055738
 MonoBehaviour:
   m_ObjectHideFlags: 0

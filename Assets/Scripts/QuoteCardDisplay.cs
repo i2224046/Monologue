@@ -4,6 +4,7 @@ using TMPro;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 /// <summary>
 /// Waiting状態で画像と名言のペアを表示するコンポーネント。
@@ -36,6 +37,10 @@ public class QuoteCardDisplay : MonoBehaviour
     private List<MessagePairData> pairs = new List<MessagePairData>();
     private Coroutine displayCoroutine;
 
+    // Smart Shuffle用フィールド
+    private List<MessagePairData> shuffledQueue;
+    private int currentQueueIndex = 0;
+
     /// <summary>
     /// 名言カード表示を開始する
     /// </summary>
@@ -54,12 +59,17 @@ public class QuoteCardDisplay : MonoBehaviour
         // 既存のコルーチンを停止
         StopLoop();
 
+        // スマートシャッフル初期化
+        InitializeSmartShuffle();
+
         // 吹き出し背景を表示
         if (speechBubbleImage != null) speechBubbleImage.gameObject.SetActive(true);
+        // 画像を表示
+        if (quoteImage != null) quoteImage.gameObject.SetActive(true);
 
         // 表示ループ開始
         displayCoroutine = StartCoroutine(DisplayLoop());
-        Debug.Log($"[QuoteCardDisplay] 表示開始: {pairs.Count}件のペアデータ");
+        Debug.Log($"[QuoteCardDisplay] 表示開始: {pairs.Count}件のペアデータ (Smart Shuffle)");
     }
 
     /// <summary>
@@ -71,6 +81,8 @@ public class QuoteCardDisplay : MonoBehaviour
         ClearDisplay();
         // 吹き出し背景を非表示
         if (speechBubbleImage != null) speechBubbleImage.gameObject.SetActive(false);
+        // 画像を非表示
+        if (quoteImage != null) quoteImage.gameObject.SetActive(false);
         Debug.Log("[QuoteCardDisplay] 表示停止");
     }
 
@@ -100,13 +112,88 @@ public class QuoteCardDisplay : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// スマートシャッフルを初期化する
+    /// 最新のペアを先頭に、残りをシャッフルしてキューに格納
+    /// </summary>
+    private void InitializeSmartShuffle()
+    {
+        if (pairs == null || pairs.Count == 0)
+        {
+            shuffledQueue = new List<MessagePairData>();
+            return;
+        }
+
+        // timestampでソート（最新が先頭）
+        // timestampがnullまたは空の場合は最古として扱う
+        var sorted = pairs
+            .OrderByDescending(p => string.IsNullOrEmpty(p.timestamp) ? "" : p.timestamp)
+            .ToList();
+
+        if (sorted.Count == 1)
+        {
+            // 1件のみの場合はシャッフル不要
+            shuffledQueue = new List<MessagePairData>(sorted);
+        }
+        else
+        {
+            // 最新を除いた残りをシャッフル
+            var rest = sorted.Skip(1).ToList();
+            ShuffleList(rest);
+
+            // キュー構築: 最新 + シャッフル済み
+            shuffledQueue = new List<MessagePairData> { sorted[0] };
+            shuffledQueue.AddRange(rest);
+        }
+
+        currentQueueIndex = 0;
+        Debug.Log($"[QuoteCardDisplay] Smart shuffle initialized: {shuffledQueue.Count} pairs");
+    }
+
+    /// <summary>
+    /// Fisher-Yates シャッフルアルゴリズム
+    /// </summary>
+    private void ShuffleList<T>(List<T> list)
+    {
+        for (int i = list.Count - 1; i > 0; i--)
+        {
+            int j = Random.Range(0, i + 1);
+            (list[i], list[j]) = (list[j], list[i]);
+        }
+    }
+
+    /// <summary>
+    /// 次のペアを取得する（一周したら再シャッフル）
+    /// </summary>
+    private MessagePairData GetNextPair()
+    {
+        if (shuffledQueue == null || shuffledQueue.Count == 0)
+            return null;
+
+        var pair = shuffledQueue[currentQueueIndex];
+        currentQueueIndex++;
+
+        // 一周したら再シャッフル
+        if (currentQueueIndex >= shuffledQueue.Count)
+        {
+            InitializeSmartShuffle();
+        }
+
+        return pair;
+    }
+
     private IEnumerator DisplayLoop()
     {
         while (true)
         {
-            // ランダムにペアを選択
-            int index = Random.Range(0, pairs.Count);
-            MessagePairData pair = pairs[index];
+            // スマートシャッフルから次のペアを取得
+            MessagePairData pair = GetNextPair();
+            
+            if (pair == null)
+            {
+                Debug.LogWarning("[QuoteCardDisplay] No pairs available to display");
+                yield break;
+            }
 
             // 表示を更新
             DisplayPair(pair);

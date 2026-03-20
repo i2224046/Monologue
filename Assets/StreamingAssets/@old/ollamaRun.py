@@ -11,7 +11,7 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
 # --- 設定: モデル ---
-MODEL_NAME = 'qwen2.5vl:7b'
+MODEL_NAME = 'qwen3-vl:8b'
 WATCHED_EXTENSIONS = {'.jpg', '.jpeg', '.png'}
 
 # --- 設定: 音声合成 API ---

@@ -10,7 +10,7 @@ import prompts
 logger = logging.getLogger(__name__)
 
 class OllamaClient:
-    def __init__(self, model_name="qwen2.5vl:7b"):
+    def __init__(self, model_name="qwen3-vl:8b"):
         self.model_name = model_name
 
     def extract_json(self, text):

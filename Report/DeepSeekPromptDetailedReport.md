@@ -28,10 +28,10 @@ graph LR
 
 | ファイル | 役割 |
 |---------|------|
-| [main_vision_voice.py](file:///Users/asanolab/Sotsusei1107/Assets/StreamingAssets/main_vision_voice.py) | メインロジック・プロンプト組み立て |
-| [deepseek_client.py](file:///Users/asanolab/Sotsusei1107/Assets/StreamingAssets/deepseek_client.py) | DeepSeek API クライアント |
-| [prompts.py](file:///Users/asanolab/Sotsusei1107/Assets/StreamingAssets/prompts.py) | プロンプトテンプレート定義 |
-| [item_obsessions.py](file:///Users/asanolab/Sotsusei1107/Assets/StreamingAssets/item_obsessions.py) | アイテム別メモリ指示DB |
+| [main_vision_voice.py](../Assets/StreamingAssets/main_vision_voice.py) | メインロジック・プロンプト組み立て |
+| [deepseek_client.py](../Assets/StreamingAssets/deepseek_client.py) | DeepSeek API クライアント |
+| [prompts.py](../Assets/StreamingAssets/prompts.py) | プロンプトテンプレート定義 |
+| [item_obsessions.py](../Assets/StreamingAssets/item_obsessions.py) | アイテム別メモリ指示DB |
 
 ---
 
@@ -75,7 +75,7 @@ Speak quietly, like recalling a shared moment with the owner.
 
 Ollama分析の結果から生成されます。
 
-**生成コード** ([_process_analysis](file:///Users/asanolab/Sotsusei1107/Assets/StreamingAssets/main_vision_voice.py#L278-L309)):
+**生成コード** ([_process_analysis](../Assets/StreamingAssets/main_vision_voice.py#L278-L309)):
 
 ```python
 item_name = analysis_data.get("item_name", "Object")
@@ -142,7 +142,7 @@ Core Logic: You are the OBJECT itself. Speak from MEMORY and PHYSICAL SENSATION,
 
 **条件**: `item_name` が `MEMORY_DB` のキーワードと一致した場合のみ注入されます。
 
-**マッチングロジック** ([get_obsession_instruction](file:///Users/asanolab/Sotsusei1107/Assets/StreamingAssets/item_obsessions.py#L239-L258)):
+**マッチングロジック** ([get_obsession_instruction](../Assets/StreamingAssets/item_obsessions.py#L239-L258)):
 
 1. **完全一致を優先**: `item_name.lower()` がDBキーと完全一致
 2. **部分一致**: DBキーが `item_name` に含まれる

@@ -26,7 +26,7 @@ Based on your observations:
 **Step 3: FINAL ANSWER**
 Output ONLY the following JSON. No additional text before or after:
 ```json
-{"is_machine": YOUR_BOOLEAN, "shape": "YOUR_SHAPE", "state": "YOUR_STATE", "item_name": "YOUR_ITEM_NAME"}
+{"is_machine": YOUR_BOOLEAN, "shape": "YOUR_SHAPE", "state": "YOUR_STATE", "item_name": "YOUR_ITEM_NAME", "item_category": "YOUR_CATEGORY"}
 ```
 
 **JSON Schema (strictly follow):**
@@ -34,6 +34,7 @@ Output ONLY the following JSON. No additional text before or after:
 - shape: "Round" | "Sharp" | "Square" | "Other"
 - state: "Old" | "New" | "Dirty" | "Broken" | "Normal"
 - item_name: string (specific object name, Japanese preferred e.g. "ボールペン", "ノート", "時計")
+- item_category: "machine" | "cloth" | "container" | "stationery" | "leather" | "metal" | "other"
 """
 
 # YOLO検出結果をヒントとして活用するプロンプト
@@ -66,7 +67,7 @@ Based on your observations:
 **Step 3: FINAL ANSWER**
 Output ONLY the following JSON. No additional text before or after:
 ```json
-{{"is_machine": YOUR_BOOLEAN, "shape": "YOUR_SHAPE", "state": "YOUR_STATE", "item_name": "YOUR_ITEM_NAME"}}
+{{"is_machine": YOUR_BOOLEAN, "shape": "YOUR_SHAPE", "state": "YOUR_STATE", "item_name": "YOUR_ITEM_NAME", "item_category": "YOUR_CATEGORY"}}
 ```
 
 **JSON Schema (strictly follow):**
@@ -74,6 +75,7 @@ Output ONLY the following JSON. No additional text before or after:
 - shape: "Round" | "Sharp" | "Square" | "Other"
 - state: "Old" | "New" | "Dirty" | "Broken" | "Normal"
 - item_name: string (specific object name, Japanese preferred e.g. "ボールペン", "ノート", "時計")
+- item_category: "machine" | "cloth" | "container" | "stationery" | "leather" | "metal" | "other"
 """
 
 # Random Topics List - Memory & Episode Based (Universal for any object)

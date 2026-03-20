@@ -13,6 +13,7 @@ import numpy as np
 import logging
 import subprocess
 import sys
+import time
 
 logger = logging.getLogger(__name__)
 
@@ -111,16 +112,21 @@ def find_physical_camera_index(exclude_keywords=EXCLUDED_CAMERA_KEYWORDS):
             excluded_indices.add(idx)
             logger.info(f"[[CAMERA]] 仮想カメラを除外リストに追加: {name} (Index {idx})")
     
-    # OpenCVで全カメラをスキャン
+    # OpenCVでカメラをスキャン
     logger.info("[[CAMERA]] OpenCVでカメラをスキャン中...")
     candidates = []
     
-    for i in range(10):  # 最大10デバイスをスキャン
-        # 除外リストにあるインデックスはスキップ
-        if i in excluded_indices:
-            logger.info(f"[[CAMERA]] Index {i} をスキップ（除外リスト: {camera_names.get(i, 'Unknown')}）")
-            continue
-        
+    # macOSカメラ情報がある場合は、その情報に基づいてスキャン範囲を決定
+    if macos_cameras:
+        # 検出されたカメラのインデックスのみをスキャン（存在しないデバイスへのアクセスを避ける）
+        scan_indices = [cam["index"] for cam in macos_cameras if cam["index"] not in excluded_indices]
+        logger.info(f"[[CAMERA]] macOSカメラ情報に基づきスキャン: {scan_indices}")
+    else:
+        # macOSカメラ情報が取得できない場合はフォールバック（0-2のみ）
+        scan_indices = [i for i in range(3) if i not in excluded_indices]
+        logger.info(f"[[CAMERA]] フォールバックモード: インデックス {scan_indices} をスキャン")
+    
+    for i in scan_indices:
         cap = cv2.VideoCapture(i)
         if cap.isOpened():
             fps = cap.get(cv2.CAP_PROP_FPS)
@@ -265,6 +271,20 @@ class CameraCapture:
         logger.info(f"カメラ初期化完了: {actual_w}x{actual_h} @ {fps}fps")
         logger.info(f"  露出: {actual_exposure}, コントラスト: {actual_contrast}, 彩度: {actual_saturation}, 明るさ: {actual_brightness}")
         
+        # カメラウェイクアップ待機（スリープ復帰対策）
+        logger.info("[[CAMERA]] カメラ安定化待機中...")
+        time.sleep(0.5)
+        
+        # 初回フレーム取得でカメラを完全に起動
+        for attempt in range(3):
+            ret, _ = self.cap.read()
+            if ret:
+                logger.info("[[CAMERA]] カメラ準備完了")
+                break
+            time.sleep(0.2)
+        else:
+            logger.warning("[[CAMERA]] 初回フレーム取得に失敗（継続）")
+        
         self._is_initialized = True
         return True
 
@@ -286,23 +306,47 @@ class CameraCapture:
         
         logger.info(f"撮影開始: ウォームアップ{warmup_frames}フレーム, 撮影{capture_frames}フレーム")
         
-        # 1. ウォームアップ（露出安定待ち）
-        for i in range(warmup_frames):
-            ret, _ = self.cap.read()
-            if not ret:
-                logger.warning(f"ウォームアップフレーム{i}の取得失敗")
-        
-        # 2. 複数フレームを取得
-        frames = []
-        for i in range(capture_frames):
-            ret, frame = self.cap.read()
-            if ret:
-                frames.append(frame.astype(np.float32))
-            else:
-                logger.warning(f"キャプチャフレーム{i}の取得失敗")
+        max_retries = 2
+        for retry in range(max_retries + 1):
+            # 1. ウォームアップ（露出安定待ち）
+            warmup_success = 0
+            for i in range(warmup_frames):
+                ret, _ = self.cap.read()
+                if ret:
+                    warmup_success += 1
+                else:
+                    logger.warning(f"ウォームアップフレーム{i}の取得失敗")
+            
+            # ウォームアップが全て失敗した場合はカメラを再初期化
+            if warmup_success == 0 and retry < max_retries:
+                logger.warning(f"[[CAMERA]] ウォームアップ全失敗、カメラ再初期化を試行 ({retry + 1}/{max_retries})")
+                self.cap.release()
+                time.sleep(0.5)
+                self.cap = cv2.VideoCapture(self.camera_index)
+                if not self.cap.isOpened():
+                    logger.error("カメラ再オープン失敗")
+                    continue
+                time.sleep(0.3)
+                continue
+            
+            # 2. 複数フレームを取得
+            frames = []
+            for i in range(capture_frames):
+                ret, frame = self.cap.read()
+                if ret:
+                    frames.append(frame.astype(np.float32))
+                else:
+                    logger.warning(f"キャプチャフレーム{i}の取得失敗")
+            
+            if len(frames) > 0:
+                break  # 成功
+            
+            if retry < max_retries:
+                logger.warning(f"[[CAMERA]] キャプチャ失敗、リトライ ({retry + 1}/{max_retries})")
+                time.sleep(0.3)
         
         if len(frames) == 0:
-            logger.error("フレームを取得できませんでした")
+            logger.error("フレームを取得できませんでした（リトライ後も失敗）")
             return None
         
         # 3. 中央値を計算（フリッカー除去）
