@@ -1,0 +1,45 @@
+﻿<Properties StartupConfiguration="{73C7E5B0-40E6-8A90-63E1-ADCB4FC9F3FC}|">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/PythonLauncher.cs">
+    <Files>
+      <File FileName="Assets/Scripts/WebCamCapture.cs" Line="78" Column="31" />
+      <File FileName="Assets/Scripts/captureTrigger.cs" />
+      <File FileName="Assets/Scripts/PanelController.cs" Line="7" Column="29" />
+      <File FileName="Assets/Scripts/PythonLauncher.cs" Line="106" Column="1" />
+      <File FileName="Assets/Scripts/InputExitHandler.cs" />
+      <File FileName="Assets/Scripts/PythonMessageTMP.cs" Line="99" Column="1" />
+      <File FileName="Assets/Scripts/ImageRotator.cs" />
+      <File FileName="Assets/Scripts/ImageFader.cs" />
+      <File FileName="Assets/Scripts/DisplayManager.cs" />
+      <File FileName="Assets/Scripts/FlowManager.cs" Line="130" Column="1" />
+      <File FileName="Assets/Scripts/ActivateSubDisplay.cs" />
+      <File FileName="Assets/Scripts/MessageFileManager.cs" />
+      <File FileName="Assets/Scripts/MessageWindowManager.cs" Line="8" Column="19" />
+      <File FileName="Assets/Scripts/MessageSystemController.cs" />
+      <File FileName="Assets/Scripts/MessageVoicePlayer.cs" />
+      <File FileName="Assets/StreamingAssets/Message.txt" />
+      <File FileName="Assets/Scripts/MessageWindowAnimation.cs" />
+      <File FileName="Assets/Scripts/ImageCutoff.cs" Line="3" Column="25" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Sotsusei1107" expanded="True">
+            <Node name="Assets" expanded="True">
+              <Node name="Scripts" expanded="True">
+                <Node name="PythonLauncher.cs" selected="True" />
+              </Node>
+              <Node name="StreamingAssets" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="da5ceb10-db58-4594-940c-7c3db6b3018e" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>

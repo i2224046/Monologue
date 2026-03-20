@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>モノ・ローグ</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0 auto;
+            max-width: 600px;
+            padding: 20px;
+            line-height: 1.5;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        section {
+            margin-bottom: 40px;
+        }
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .icon {
+            width: 60px;
+            height: 60px;
+            background-color: #ddd;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+        .button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #eee;
+            color: #000;
+            text-align: center;
+            text-decoration: none;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .button:hover {
+            background-color: #000;
+            color: #fff;
+        }
+        /* 外部API画像用 */
+        .api-card {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+        /* YouTube埋め込み用 */
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%;
+            margin-bottom: 30px;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>モノ・ローグ</h1>
+
+    <div class="video-container">
+        <iframe src="https://www.youtube.com/embed/SlmGs-FJZzM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
+
+    <section>
+        <h2>概要</h2>
+        <p>自分の持ち物を置くと、その持ち物の気持ちがわかるという作品です。私は、幼少期からの持ち物を今でも使っている事が多く、周りから「物持ちがいい」と言われていました。そこから、物が家族や友人より自分のそばにいる事に気付き、物は普段自分のことをどう思っているのか？が知れたら面白いし、ものを大切にするきっかけになってほしいと考えて制作しました。仕組みとしては、モノを置くと写真を撮影して機械学習や深層学習モデルが物体名を判断し、一旦テキスト情報にしてからインターネットを介してAIで、そのモノが思っていそうなことを出力しています。昨今のAI技術を取り入れる事で、今までにない新たな体験を作ろうとしている他、写真に写るものをローカルでテキスト情報に変換した後、ネットワークを介したAIに伝えることにより、プライバシーの問題も意識しており、情報の保護を行っています。</p>
+    </section>
+
+    <section>
+        <h2>リポジトリ</h2>
+        <a href="https://github.com/i2224046/Monologue" target="_blank" rel="noopener noreferrer">
+            <img src="https://github-readme-stats.vercel.app/api/pin/?username=i2224046&repo=Monologue&show_owner=true" alt="Monologue Repository Card" class="api-card">
+        </a>
+    </section>
+
+    <section>
+        <h2>プロフィール</h2>
+        <div class="profile">
+            <span class="icon"></span>
+            <p>創作団体ARGO所属。あ、ちゃんと一般企業にも就職しています。</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>リンク</h2>
+        <a href="https://studio-argo.com/" class="button">創作団体ARGO</a>
+    </section>
+
+</body>
+</html>

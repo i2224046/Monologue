@@ -1,0 +1,13 @@
+{
+  "total_detections": 5,
+  "all_detections": [
+    {
+      "class": "mouse",
+      "confidence": 0.9216030836105347,
+      "bbox": [
+        728,
+        552,
+        1006,
+        718
+      ],
+      "area": 

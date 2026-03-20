@@ -1,0 +1,21 @@
+'.' フォルダを監視中... (対象拡張子: .jpeg, .png, .jpg) (ログ: image_processing_log.txt)
+--- 処理中: /Users/asanolab/Sotsusei1107/Assets/StreamingAssets/capture/capture_20251111183817.png ---
+'.' フォルダを監視中... (対象拡張子: .jpeg, .png, .jpg) (ログ: image_processing_log.txt)
+--- 処理中: /Users/asanolab/Sotsusei1107/Assets/StreamingAssets/capture/capture_20251111183935.png ---
+'.' フォルダを監視中... (対象拡張子: .png, .jpeg, .jpg) (ログ: image_processing_log.txt)
+'.' フォルダを監視中... (対象拡張子: .png, .jpg, .jpeg) (ログ: image_processing_log.txt)
+--- 処理中: /Users/asanolab/Sotsusei1107/Assets/StreamingAssets/capture/capture_20251111183817.png ---
+結果: ちょっと手荒いけど、それでも私の大事な存在感は変わらないよ！by 破損したペットボトル
+----------------------------------------------------------------------------------------------------------
+--- 処理中: /Users/asanolab/Sotsusei1107/Assets/StreamingAssets/capture/capture_20251111183817のコピー.png ---
+結果: ちょっと手荒いけど、それでも私の役割は変わらないよ！by 破損したペットボトル
+---------------------------------------------------------------------------------------------------------------
+'.' フォルダを監視中... (対象拡張子: .jpeg, .png, .jpg) (ログ: image_processing_log.txt)
+--- 処理中: /Users/asanolab/Sotsusei1107/Assets/StreamingAssets/capture/capture_20251111184234.png ---
+--- 処理中: /Users/asanolab/Sotsusei1107/Assets/StreamingAssets/capture/capture_20251111184234.png ---
+結果: ちょっと水が入ってるけど、それでも私の心を満たしてくれるよ！by ちょっと水が入ってるペットボトル
+----------------------------------------------------------------------------------------------------------
+監視を停止しました。
+'.' フォルダを監視中... (対象拡張子: .jpg, .jpeg, .png) (ログ: image_processing_log.txt)
+'.' フォルダを監視中... (対象拡張子: .png, .jpeg, .jpg) (ログ: image_processing_log.txt)
+監視を停止しました。

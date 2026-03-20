@@ -1,0 +1,219 @@
+[
+    {
+        "speakerName": "A-アドリフター",
+        "speakerUuid": "159468ca-1788-11f0-8256-0242ac1c000c",
+        "styles": [
+            {
+                "styleName": "ノーマル",
+                "styleId": 217411843
+            }
+        ],
+        "version": "0.0.1"
+    },
+    {
+        "speakerName": "水無月ねねこ",
+        "speakerUuid": "48257518-f5eb-11ef-9f2c-0242ac1c000c",
+        "styles": [
+            {
+                "styleName": "アンリアル",
+                "styleId": 21317466
+            }
+        ],
+        "version": "0.0.1"
+    },
+    {
+        "speakerName": "リセット＝マーズ",
+        "speakerUuid": "803dbd0c-d89f-11ef-a53d-0242ac120002",
+        "styles": [
+            {
+                "styleName": "のーまる",
+                "styleId": 4820913746
+            }
+        ],
+        "version": "0.0.1"
+    },
+    {
+        "speakerName": "兄口誘太郎-くちなわ",
+        "speakerUuid": "94b2df04-c7eb-11ed-b28b-0242ac1c000c",
+        "styles": [
+            {
+                "styleName": "モノローグ",
+                "styleId": 1801251130
+            }
+        ],
+        "version": "0.0.1"
+    },
+    {
+        "speakerName": "蔓歌ろこ",
+        "speakerUuid": "e555b014-4506-11ef-85ee-0242ac1c000e",
+        "styles": [
+            {
+                "styleName": "泣き",
+                "styleId": 4
+            }
+        ],
+        "version": "0.0.1"
+    },
+    {
+        "speakerName": "虚音イフ",
+        "speakerUuid": "a21dde9c-0160-11ee-b029-0242ac1c000c",
+        "styles": [
+            {
+                "styleName": "応急措置モデル",
+                "styleId": 414117359
+            }
+        ],
+        "version": "0.0.1"
+    },
+    {
+        "speakerName": "ちゃんこ鍋",
+        "speakerUuid": "aa5b73a8-cb21-11ef-a0d1-0242ac1c000c",
+        "styles": [
+            {
+                "styleName": "鬱鍋",
+                "styleId": 839521604
+            }
+        ],
+        "version": "0.0.1"
+    },
+    {
+        "speakerName": "AI声優-青葉",
+        "speakerUuid": "d219f5ab-a50b-4d99-a26a-a9fc213e9100",
+        "styles": [
+            {
+                "styleName": "のーまる",
+                "styleId": 60
+            }
+        ],
+        "version": "2.0.1"
+    },
+    {
+        "speakerName": "アルマちゃん",
+        "speakerUuid": "c97966b1-d80c-04f5-aba5-d30a92843b59",
+        "styles": [
+            {
+                "styleName": "表-v2",
+                "styleId": 10
+            }
+        ],
+        "version": "2.0.0"
+    },
+    {
+        "speakerName": "松嘩りすく",
+        "speakerUuid": "d31b5442-dddb-11ec-82ba-0242ac1c0002",
+        "styles": [
+            {
+                "styleName": "アナウンス",
+                "styleId": 685839221
+            },
+            {
+                "styleName": "大声通常",
+                "styleId": 685839222
+            }
+        ],
+        "version": "0.0.1"
+    },
+    {
+        "speakerName": "ディアちゃん",
+        "speakerUuid": "b28bb401-bc43-c9c7-77e4-77a2bbb4b283",
+        "styles": [
+            {
+                "styleName": "のーまる",
+                "styleId": 3
+            }
+        ],
+        "version": "2.1.0"
+    },
+    {
+        "speakerName": "AI声優-銀芽",
+        "speakerUuid": "d312d0fb-d38d-434e-825d-cbcbfd105ad0",
+        "styles": [
+            {
+                "styleName": "のーまるv2",
+                "styleId": 70
+            }
+        ],
+        "version": "2.2.0"
+    },
+    {
+        "speakerName": "KANA",
+        "speakerUuid": "297a5b91-f88a-6951-5841-f1e648b2e594",
+        "styles": [
+            {
+                "styleName": "のーまる",
+                "styleId": 30
+            }
+        ],
+        "version": "2.0.0"
+    },
+    {
+        "speakerName": "空星ショア",
+        "speakerUuid": "kuusei_shoa_mycoe",
+        "styles": [
+            {
+                "styleName": "アルファ",
+                "styleId": 240169797
+            }
+        ],
+        "version": "0.0.1"
+    },
+    {
+        "speakerName": "リリンちゃん",
+        "speakerUuid": "cb11bdbd-78fc-4f16-b528-a400bae1782d",
+        "styles": [
+            {
+                "styleName": "のーまる",
+                "styleId": 90
+            }
+        ],
+        "version": "2.1.0"
+    },
+    {
+        "speakerName": "MANA",
+        "speakerUuid": "292ea286-3d5f-f1cc-157c-66462a6a9d08",
+        "styles": [
+            {
+                "styleName": "のーまる",
+                "styleId": 1
+            },
+            {
+                "styleName": "ふくれっつら",
+                "styleId": 41
+            }
+        ],
+        "version": "2.1.0"
+    },
+    {
+        "speakerName": "おふとんP",
+        "speakerUuid": "a60ebf6c-626a-7ce6-5d69-c92bf2a1a1d0",
+        "styles": [
+            {
+                "styleName": "のーまるv2",
+                "styleId": 2
+            }
+        ],
+        "version": "2.1.1"
+    },
+    {
+        "speakerName": "つくよみちゃん",
+        "speakerUuid": "3c37646f-3881-5374-2a83-149267990abc",
+        "styles": [
+            {
+                "styleName": "れいせい",
+                "styleId": 0
+            }
+        ],
+        "version": "2.0.0"
+    },
+    {
+        "speakerName": "毒命(Tokumei)",
+        "speakerUuid": "8d06b8e2-0499-11f0-b0ff-0242ac1c000c",
+        "styles": [
+            {
+                "styleName": "のーまる",
+                "styleId": 95367463
+            }
+        ],
+        "version": "0.0.1"
+    }
+]
